@@ -75,6 +75,8 @@ Here is the setting of `c_cpp_properties.json` and `tasks.json`:
 
 After all the settings have been done, we can press `Ctrl+Shift+B` to run the task, if your settings is correct, then there will have an executable file which named `main.exe`.
 
-Or you can just [DOWNLOAD a pre-built VM images]() provided by TA.
+Or you can just [DOWNLOAD a pre-built VM images](http://gofile.me/39GpL/XU5tznyO6) provided by TA.
+
+> [Guide of environment setting](https://hackmd.io/-5WZQC-1QqOeV3KUX65tEw?view) on Windows.
 
 ## TODO - Your descriptions about solutions/algorithms/results
