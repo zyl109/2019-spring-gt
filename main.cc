@@ -14,7 +14,6 @@ NetworkManager *nm = new NetworkManager();
 int main(int argc, char** argv){
 
     /* start your program */
-test123
-trest546546546
+tttttttttttt1232123
     return 0;
 }
