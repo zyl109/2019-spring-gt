@@ -13,7 +13,7 @@ $ cd fake-mininet && make lib && cd .. && cp fake-mininet/libfakemn.a .
 # build
 $ make 
 # run 
-$ ./main.out
+$ ./main.out FileName
 ```
 
 ### Windows
