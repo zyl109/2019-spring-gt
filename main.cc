@@ -12,34 +12,39 @@ NetworkManager *nm = new NetworkManager();
 
 stack<string> find_euler_circuit(NetworkManager* graph){
 	
-	cout<<"cominggggggggggggggggggg!!!!!!!!!"<<endl;
+	//cout<<"cominggggggggggggggggggg!!!!!!!!!"<<endl;
 	stack<string> tempPath, finalPath;
 	
 	tempPath.push(graph->vlist[0]->name);
 	//cout<<"tempPath is "<<tempPath.empty()<<endl;
 	while(!tempPath.empty()){
-		cout<<"while!!!!!!!!!!!!!!!!!"<<endl;
-		cout<<"switch number is "<<graph->switch_num<<endl;
+		//cout<<"while!!!!!!!!!!!!!!!!!"<<endl;
+		//cout<<"switch number is "<<graph->switch_num<<endl;
 		for(int i=0; i<graph->switch_num; i++){
-			cout<<"i = "<<i<<endl;
+			//cout<<"i = "<<i<<endl;
 			if(graph->connected_d(tempPath.top(), graph->vlist[i]->name) == 0){
 				cout<<tempPath.top()<<" and "<<graph->vlist[i]->name<<" is connected!"<<endl;
 				graph->disconnect(tempPath.top(), graph->vlist[i]->name);
 				tempPath.push(graph->vlist[i]->name);
 				cout<<"tempPath's top is: "<<tempPath.top()<<endl;
+				graph->print_all_e();
 				break;
 			}
 			else if(graph->connected_d(graph->vlist[i]->name, tempPath.top()) == 0){
-				cout<<tempPath.top()<<" and "<<graph->vlist[i]->name<<" is connected!"<<endl;
+				cout<<graph->vlist[i]->name<<" and "<<tempPath.top()<<" is connected!"<<endl;
 				graph->disconnect(graph->vlist[i]->name, tempPath.top());
 				tempPath.push(graph->vlist[i]->name);
 				cout<<"tempPath's top is: "<<tempPath.top()<<endl;
+				graph->print_all_e();
 				break;
 			}
 			else if(i==graph->switch_num-1){
+				cout<<"push push: "<<tempPath.top()<<endl;
 				finalPath.push(tempPath.top());
-				cout<<"push push"<<endl;
 				tempPath.pop();
+				if(!tempPath.empty())
+					cout<<"tempPath's top is: "<<tempPath.top()<<endl;
+				
 				break;
 			}
 			
@@ -47,6 +52,7 @@ stack<string> find_euler_circuit(NetworkManager* graph){
 		
 	}
 	
+	graph->print_all_v();
 	return finalPath;
 	
 }
@@ -121,7 +127,10 @@ int main(int argc, char** argv){
 	nm->print_all_e();
 	//cout<<"first of odd_nodes:"<<odd_nodes.front()->name<<endl;
 		
+	//nm->disconnect("d","e");
+	//nm->print_all_e();
 	
+
 	//find Euler circuit
 	stack<string> finalPath;
 	cout<<"NOT cominggggggggggggggggggg!!!!!!!!!"<<endl;
@@ -132,7 +141,6 @@ int main(int argc, char** argv){
 		finalPath.pop();
 	}
 	cout<<endl;
-	
 	
 
     
