@@ -124,6 +124,7 @@ int main(int argc, char** argv){
 	for(int i=0; i<odd_nodes.size()-1; i+=2){
 		nm->connect(odd_nodes[i]->name, odd_nodes[i+1]->name);
 	}
+	
 	nm->print_all_e();
 	//cout<<"first of odd_nodes:"<<odd_nodes.front()->name<<endl;
 		
