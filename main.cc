@@ -11,16 +11,12 @@ using namespace std;
 NetworkManager *nm = new NetworkManager();
 
 stack<string> find_euler_circuit(NetworkManager* graph){
-
 	stack<string> tempPath, finalPath;
 	
 	//push first node to tempPath
 	tempPath.push(graph->vlist[0]->name);
-	
 	while(!tempPath.empty()){
-		
 		for(int i=0; i<graph->switch_num; i++){
-			
 			//if there are egdes from tempPath's top to its neighborhoods
 			//mark this edge and push neighborhood to tempPath
 			if(graph->connected_d(tempPath.top(), graph->vlist[i]->name) == 0){
@@ -49,18 +45,30 @@ stack<string> find_euler_circuit(NetworkManager* graph){
 				tempPath.pop();
 				//if(!tempPath.empty())
 					//cout<<"tempPath's top is: "<<tempPath.top()<<endl;
-				
 				break;
 			}
-			
 		}
-		
 	}
-
 	//graph->print_all_v();
 	return finalPath;	
 }
 
+
+vector<int> find_optimal_pairs(vector<vector<int >> cost_matrix, int size){
+	vector<int> optimal_pairs;
+	for(int i=0; i<size; i++){
+		
+		optimal_pairs.push_back(i);
+		
+		
+	}
+	
+	return optimal_pairs;
+	
+	
+	
+	
+}
 
 
 int main(int argc, char** argv){
@@ -85,16 +93,6 @@ int main(int argc, char** argv){
 	}
 	
 	
-	
-	/*
-	//path exercise
-	Path *path;
-	path=new Path();
-	path->append(nm->elist);
-	std::vector<std::vector<Edge *>> avail_paths = path->find_paths(std::string("a"), std::string("d"));
-	path->debug();
-	*/
-	
 	//find out all odd nodes
 	vector<Vertex*> odd_nodes;
 	for(int i=0; i<nm->switch_num; i++){
@@ -118,18 +116,12 @@ int main(int argc, char** argv){
 	}
 
 	//print odd nodes
+	int odd_nodes_number = odd_nodes.size();
 	cout<<"odd nodes are:"<<endl;
-	for(int i=0; i<odd_nodes.size(); i++){
+	for(int i=0; i<odd_nodes_number; i++){
 		cout<<odd_nodes[i]->name<<endl;
 	}
 	
-	/*
-	//BFS
-	for(int i=0; i<odd_nodes.size(); i++){
-		distance[i] = get_distance(odd_nodes[i]->name, odd_nodes[j]->name, nm);
-		}
-	}
-	*/
 	
 	//construct a bi-direcational graph
 	NetworkManager* tempGraph = new NetworkManager();
@@ -142,21 +134,25 @@ int main(int argc, char** argv){
 		}	
 	}
 	
+	
+	//construct a table of shortest paths length between odd nodes
 	Path *path;
 	path=new Path();
 	path->append(tempGraph->elist);
 	vector<vector<Edge *>> avail_paths;
-	vector<vector<Edge *>> shortest_paths;
 	
 	
-	
-	int shortest_paths_length[odd_nodes.size()][odd_nodes.size()];
-	
-	for(int i=0; i<odd_nodes.size(); i++){
-		for(int j=0; j<odd_nodes.size(); j++){
-			shortest_paths_length[i][j]=0;
+	//int shortest_paths_length[odd_nodes_number][odd_nodes_number];
+	vector<vector<int> >shortest_paths_length;
+	for(int i=0; i<odd_nodes_number; i++){
+		vector<int> tempVector;
+		for(int j=0; j<odd_nodes_number; j++){
+			if(i==j)
+			tempVector.push_back(0);
+			//shortest_paths_length[i][j]=0;
+			//shortest_paths_length.at(i).at(j)=0;
 			
-			if(i!=j){
+			else{
 				avail_paths = path->find_paths(odd_nodes[i]->name, odd_nodes[j]->name);
 				
 				cout<<"From "
@@ -168,8 +164,12 @@ int main(int argc, char** argv){
 					<<" j = "
 					<<j
 					<<endl;
-				//path->debug();
-	
+				
+				tempVector.push_back(avail_paths.back().size());
+				//shortest_paths_length[i][j]=avail_paths.back().size();
+				//shortest_paths_length.at(i).at(j)=avail_paths.back().size();
+				
+				/*
 				for(int k=0; k<avail_paths.back().size(); k++){
 					cout<<"head: "
 						<<avail_paths.back().at(k)->head->name
@@ -178,13 +178,15 @@ int main(int argc, char** argv){
 						<<endl;
 					shortest_paths_length[i][j]++;
 				}
+				*/
+				
 			}
 		}
+		shortest_paths_length.push_back(tempVector);
 
 	}
-	
-	for(int i=0; i<odd_nodes.size(); i++){
-		for(int j=0; j<odd_nodes.size(); j++){
+	for(int i=0; i<odd_nodes_number; i++){
+		for(int j=0; j<odd_nodes_number; j++){
 			cout<<" i = "
 				<<i
 				<<" ,j = "
@@ -198,35 +200,72 @@ int main(int argc, char** argv){
 
 	
 
-
+	//find optimal pairwise matchings
+	vector<int> final_pairs;
 	
-
-/*	
+	final_pairs=find_optimal_pairs(shortest_paths_length, odd_nodes_number);
+	
 	//add edges
-	for(int i=0; i<odd_nodes.size()-1; i+=2){
-		nm->connect(odd_nodes[i]->name, odd_nodes[i+1]->name);
+	for(int i=0; i<odd_nodes_number/2; i++){
+		string node1=odd_nodes[final_pairs.at(0)]->name;
+		string node2=odd_nodes[final_pairs.at(1)]->name;
+		avail_paths = path->find_paths(node1, node2);
+		
+		for(int k=0; k<avail_paths.back().size(); k++){
+			nm->connect( avail_paths.back().at(k)->head->name
+						,avail_paths.back().at(k)->tail->name
+						);
+			}
+		
+		final_pairs.erase(final_pairs.begin());
+		final_pairs.erase(final_pairs.begin());
 	}
-	nm->print_all_e();
+		
+		
 	
-
-	
-
 	//find Euler circuit
 	stack<string> finalPath;
+	stack<string> finalPath2;
 	finalPath = find_euler_circuit(nm);
 	
+	
+	//generate final result graph
+	while(!finalPath.empty()){
+		string head=finalPath.top();
+		finalPath2.push(head);
+		finalPath.pop();
+		if(!finalPath.empty()){
+			nm->connect(head, finalPath.top());
+		}
+	}
+	
+	while(!finalPath2.empty()){
+		finalPath.push(finalPath2.top());
+		finalPath2.pop();
+	}
+	
+	Gplot *gp = new Gplot();
+	gp->gp_add(nm->elist);
+	gp->gp_dump(true);
+	gp->gp_export("plot");
+	
+	
+	//output final result
 	cout<<"final path is: ";
 	while(!finalPath.empty()){
 		cout<<finalPath.top()<<" ";
 		finalPath.pop();
+		if(!finalPath.empty()){
+			cout<<"-> ";
+		}
 	}
 	cout<<endl;
 	
 	
 	
 	
-	
-*/
+
+
     
     return 0;
 }
