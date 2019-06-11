@@ -53,6 +53,42 @@ stack<string> find_euler_circuit(NetworkManager* graph){
 	return finalPath;	
 }
 
+void perm(int *list, int a, int b, vector<vector<int >> cost_matrix, int size, int *cost){
+	cout<<"entering"<<endl;
+    if(a==b){
+		int temp_cost=0;
+		for(int i=0; i<size; i+=2){
+			temp_cost=temp_cost+cost_matrix[i][i+1];
+		}
+		cout<<"temp_cost = "<<temp_cost<<endl;
+		cout<<"cost = "<<*cost<<endl;
+		if(temp_cost<*cost){
+			*cost=temp_cost;
+			cout<<"cost = "<<*cost<<endl;
+			final_pairs->clear();
+			cout<<"clear"<<endl;
+			
+			
+			for(int i=0; i<size; i++){
+				final_pairs->push_back(list[i]);	
+				cout<<"push push "<<list[i]<<endl;		
+			}
+			
+		}
+		return;
+	}
+    else{
+		for(int j=a; j<b; j++){        
+            swap(list[a], list[j]);
+            perm(list, a+1, b-1, cost_matrix, size, cost);
+            swap(list[a], list[j]);
+        }
+		cout<<"return"<<endl;
+		return;
+	}
+	
+}
+
 
 vector<int> find_optimal_pairs(vector<vector<int >> cost_matrix, int size){
 	vector<int> optimal_pairs;
