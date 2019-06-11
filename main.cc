@@ -9,7 +9,7 @@ using namespace std;
 
 // create NetworkManager first
 NetworkManager *nm = new NetworkManager();
-vector<int> *final_pairs;
+std::vector<int> all_pairs;
 
 
 
@@ -50,62 +50,40 @@ stack<string> find_euler_circuit(NetworkManager* graph){
 
 
 
-void perm(int *list, int a, int b, vector<vector<int >> cost_matrix, int size, int cost, vector<int> optimal_pairs){
-	cout<<"entering"<<endl;
-    if(a==b){
-		int temp_cost=0;
-		for(int i=0; i<size; i+=2){
-			temp_cost=temp_cost+cost_matrix[i][i+1];
+
+void Perm(int start, int end, int a[]) {
+    
+    if(start == end){
+		for (int i = 0; i < end; i++){
+			cout << a[i] << " ";
+			all_pairs.push_back(i);
 		}
-		cout<<"temp_cost = "<<temp_cost<<endl;
-		cout<<"cost = "<<cost<<endl;
-		if(temp_cost<cost){
-			cost=temp_cost;
-			cout<<"cost = "<<cost<<endl;
-			optimal_pairs.clear();
-			cout<<"clear"<<endl;
-			
-			
-			for(int i=0; i<size; i++){
-				optimal_pairs.push_back(list[i]);	
-				cout<<"push push "<<list[i]<<endl;		
-			}
-			
-		}
-	}
-    else{
-		for(int j=a; j<b; j++){        
-            swap(list[a], list[j]);
-            perm(list, a+1, b-1, cost_matrix, size, cost, optimal_pairs);
-			cout<<"finish perm"<<endl;
-            swap(list[a], list[j]);
-			cout<<"finish swap"<<endl;
-			cout<<"b = "<<b<<endl;
-			cout<<"j = "<<j<<endl;
-        }
-	}
-	cout<<"return"<<endl;
-	return;
+        cout << endl;
+	    return;
+    }
+    for (int i = start; i < end; i++) {
+        swap(a[start], a[i]);      
+        Perm(start + 1, end, a);   
+        swap(a[i], a[start]);      
+    }
 }
-
-
 
 vector<int> find_optimal_pairs(vector<vector<int >> cost_matrix, int size){
 	vector<int> optimal_pairs;
-	int* list;
-	int cost;
-	
+	int list[size];
 	for(int i=0; i<size; i++){
 		list[i]=i;	
 	}
+	Perm(0, size, list);
 	
-	perm(list, 0, size, cost_matrix, size, cost, optimal_pairs);
-	
-	cout<<"optimal_pairs is ";	
-	for(int i=0; i<size; i++){
-		cout<<optimal_pairs.at(i);
+	cout<<"all_pairs = ";
+	for(int i; i<all_pairs.size(); i++){
+		cout<<all_pairs.at(i)<<" ";
 	}
+	cout<<endl;
 	
+	optimal_pairs.push_back(0);
+	optimal_pairs.push_back(1);
 	return optimal_pairs;
 
 }

@@ -13,7 +13,7 @@ $ cd fake-mininet && make lib && cd .. && cp fake-mininet/libfakemn.a .
 # build
 $ make 
 # run 
-$ ./main.out FileName
+$ ./main.out "FileName"
 ```
 
 ### Windows
@@ -80,3 +80,7 @@ Or you can just [DOWNLOAD a pre-built VM images](http://gofile.me/39GpL/XU5tznyO
 > [Guide of environment setting](https://hackmd.io/-5WZQC-1QqOeV3KUX65tEw?view) on Windows.
 
 ## TODO - Your descriptions about solutions/algorithms/results
+
+Chinese postman problem is a problem about how to travel all edges and back to one start node in a graph.
+What I've done this project is a bi-directional and no-weighted version.
+
