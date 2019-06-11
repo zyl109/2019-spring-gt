@@ -14,6 +14,8 @@ $ cd fake-mininet && make lib && cd .. && cp fake-mininet/libfakemn.a .
 $ make 
 # run 
 $ ./main.out "FileName"
+# generate png file
+$ dot plot.dot -T png -o plot.png
 ```
 
 ### Windows
@@ -86,8 +88,10 @@ Chinese postman problem is a problem about how to travel all edges and back to o
 What I've done in this project is a bi-directional and no-weighted version.  
 
 ### Files
-1. main.cc: The main program  
-2. graph: The demo graph in project slide
-3. plot.dot: The dot file of final result
-4. plot.png: The png file of final result
+1. `main.cc` The main program  
+2. `graph` The demo graph in project slide  
+3. `plot.dot` The dot file of final result  
+4. `plot.png` The png file of final result  
 
+### Algorithms
+1.
