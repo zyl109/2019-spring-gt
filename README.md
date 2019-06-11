@@ -81,6 +81,13 @@ Or you can just [DOWNLOAD a pre-built VM images](http://gofile.me/39GpL/XU5tznyO
 
 ## TODO - Your descriptions about solutions/algorithms/results
 
+### Abstrct
 Chinese postman problem is a problem about how to travel all edges and back to one start node in a graph.  
 What I've done in this project is a bi-directional and no-weighted version.  
+
+### Files
+1. main.cc: The main program  
+2. graph: The demo graph in project slide
+3. plot.dot: The dot file of final result
+4. plot.png: The png file of final result
 
