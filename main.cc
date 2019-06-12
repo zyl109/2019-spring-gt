@@ -148,7 +148,7 @@ int main(int argc, char** argv){
 	Gplot *gp = new Gplot();
 	gp->gp_add(nm->elist);
 	gp->gp_dump(true);
-	gp->gp_export("origin");
+	gp->gp_export("origin_graph");
 	gp->~Gplot();
 
 	//print odd nodes
@@ -263,7 +263,7 @@ int main(int argc, char** argv){
 	Gplot *gp2 = new Gplot();
 	gp2->gp_add(nm->elist);
 	gp2->gp_dump(true);
-	gp2->gp_export("result");
+	gp2->gp_export("result_path");
 	gp2->~Gplot();
 	
 	
