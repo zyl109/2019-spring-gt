@@ -50,52 +50,82 @@ stack<string> find_euler_circuit(NetworkManager* graph){
 }
 
 
-
 vector<int> all_pairs;
 
-void Perm(int start, int end, int a[], vector<int> all_pairs) {
+//find all permutation of odd nodes
+void Perm(int start, int end, int a[]) {
     
     if(start == end){
 		for (int i = 0; i < end; i++){
-			cout << a[i] << " ";
+			//cout << a[i] << " ";
 			all_pairs.push_back(i);
 		}
-        cout << endl;
+        //cout << endl;
 	    return;
     }
     for (int i = start; i < end; i++) {
         swap(a[start], a[i]);      
-        Perm(start + 1, end, a, all_pairs);   
+        Perm(start + 1, end, a);   
         swap(a[i], a[start]);      
     }
 }
 
+//find optimal pairwise matchings of odd nodes
 vector<int> find_optimal_pairs(vector<vector<int >> cost_matrix, int size){
-	
+
 	vector<int> optimal_pairs;
 	int list[size];
+	int cost;
+	int temp_cost, row, col;
 	for(int i=0; i<size; i++){
 		list[i]=i;	
 	}
-	
-	Perm(0, size, list, all_pairs);
-	
-	cout<<"all_pairs = ";
-	for(int i; i<all_pairs.size(); i++){
-		cout<<all_pairs.at(i)<<" ";
-	}
-	cout<<endl;
-	
-	optimal_pairs.push_back(0);
-	optimal_pairs.push_back(1);
-	return optimal_pairs;
 
+	Perm(0, size, list);
+	
+	//firs time initialization
+	cost=0;
+	for(int i=0; i<size; i+=2){
+		row=all_pairs.at(0);
+		col=all_pairs.at(1);
+		cost=cost+cost_matrix.at(row).at(col);
+		all_pairs.erase(all_pairs.begin());
+		all_pairs.erase(all_pairs.begin());
+		optimal_pairs.push_back(row);
+		optimal_pairs.push_back(col);
+	}
+	//find min-cost matchings
+	while(!all_pairs.empty()){
+		for(int i=0; i<size; i+=2){
+			row=all_pairs.at(0);
+			col=all_pairs.at(1);
+			temp_cost=temp_cost+cost_matrix.at(row).at(col);
+			all_pairs.erase(all_pairs.begin());
+			all_pairs.erase(all_pairs.begin());
+			optimal_pairs.push_back(row);
+			optimal_pairs.push_back(col);
+		}
+		
+		if(cost>temp_cost){
+			cost=temp_cost;
+			for(int i=0; i<size; i++){
+				optimal_pairs.erase(optimal_pairs.begin());
+			}
+		}
+		else{
+			for(int i=0; i<size; i++){
+				optimal_pairs.pop_back();
+			}
+		}
+	}
+
+	return optimal_pairs;
 }
 
 
 int main(int argc, char** argv){
 	
-	/*
+	
 	//read input file
 	if(argc!=2){
 		cerr<<"worng format"<<endl;
@@ -114,35 +144,25 @@ int main(int argc, char** argv){
 		nm->print_all_v();
 		nm->print_all_e();
 	}
-	*/
 	
-	nm->interpret("graph");
-	//set switch_num
-	for(int i=0; nm->vlist[i]!=NULL; i++){
-		nm->switch_num++;
-	}
+	
 	
 	//find out all odd nodes
 	vector<Vertex*> odd_nodes;
 	for(int i=0; i<nm->switch_num; i++){
 		int degree=0;
 		for(int j=0; j<nm->switch_num; j++){
-			
-			cout<<nm->vlist[i]->name
-				<<" and "
-				<<nm->vlist[j]->name
-				<<" are "
-				<<nm->connected(nm->vlist[i]->name, nm->vlist[j]->name)<<endl;
-				
-			if(nm->connected(nm->vlist[i]->name, nm->vlist[j]->name) == 0)
+			if(nm->connected(nm->vlist[i]->name, nm->vlist[j]->name) == 0){
 				degree++;
+			}
 		}
-		cout<<"degree = "<<degree<<endl;
 		if(degree%2 != 0){
 			odd_nodes.push_back(nm->vlist[i]);
 		}
-		
 	}
+	int odd_nodes_number = odd_nodes.size();
+	
+	
 	
 	//generate original graph
 	Gplot *gp = new Gplot();
@@ -151,13 +171,7 @@ int main(int argc, char** argv){
 	gp->gp_export("origin_graph");
 	gp->~Gplot();
 
-	//print odd nodes
-	int odd_nodes_number = odd_nodes.size();
-	cout<<"odd nodes are:"<<endl;
-	for(int i=0; i<odd_nodes_number; i++){
-		cout<<odd_nodes[i]->name<<endl;
-	}
-	
+
 	
 	//construct a bi-direcational graph
 	NetworkManager* tempGraph = new NetworkManager();
@@ -176,9 +190,6 @@ int main(int argc, char** argv){
 	path=new Path();
 	path->append(tempGraph->elist);
 	vector<vector<Edge *>> avail_paths;
-	
-	
-	//int shortest_paths_length[odd_nodes_number][odd_nodes_number];
 	vector<vector<int> >shortest_paths_length;
 	for(int i=0; i<odd_nodes_number; i++){
 		vector<int> tempVector;
@@ -188,33 +199,13 @@ int main(int argc, char** argv){
 			}
 			else{
 				avail_paths = path->find_paths(odd_nodes[i]->name, odd_nodes[j]->name);
-				cout<<"From "
-					<<odd_nodes[i]->name
-					<<" to "
-					<<odd_nodes[j]->name
-					<<" i = "
-					<<i
-					<<" j = "
-					<<j
-					<<endl;
-				
 				tempVector.push_back(avail_paths.back().size());
 			}
 		}
 		shortest_paths_length.push_back(tempVector);
 
 	}
-	for(int i=0; i<odd_nodes_number; i++){
-		for(int j=0; j<odd_nodes_number; j++){
-			cout<<" i = "
-				<<i
-				<<" ,j = "
-				<<j
-				<<" ,path length = "
-				<<shortest_paths_length[i][j]
-				<<endl;
-		}
-	}
+
 
 	
 	//find optimal pairwise matchings
@@ -222,7 +213,8 @@ int main(int argc, char** argv){
 	final_pairs=find_optimal_pairs(shortest_paths_length, odd_nodes_number);
 	
 	
-	//add edges
+	
+	//add edges to eulerize the graph
 	for(int i=0; i<odd_nodes_number/2; i++){
 		string node1=odd_nodes[final_pairs.at(0)]->name;
 		string node2=odd_nodes[final_pairs.at(1)]->name;
@@ -239,10 +231,12 @@ int main(int argc, char** argv){
 	}
 		
 		
+		
 	//find Euler circuit
 	stack<string> finalPath;
 	stack<string> finalPath2;
 	finalPath = find_euler_circuit(nm);
+	
 	
 	
 	//generate final result graph
@@ -260,6 +254,8 @@ int main(int argc, char** argv){
 	}
 	
 	
+	
+	//generate result graph
 	Gplot *gp2 = new Gplot();
 	gp2->gp_add(nm->elist);
 	gp2->gp_dump(true);
@@ -269,6 +265,7 @@ int main(int argc, char** argv){
 	
 	
 	//output final result
+	cout << "======================================================" << endl;
 	cout<<"final path is: ";
 	while(!finalPath.empty()){
 		cout<<finalPath.top()<<" ";
@@ -278,6 +275,8 @@ int main(int argc, char** argv){
 		}
 	}
 	cout<<endl;
+	cout << "======================================================" << endl;
+	
 	
 	
 	
