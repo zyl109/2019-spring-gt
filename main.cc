@@ -9,7 +9,8 @@ using namespace std;
 
 // create NetworkManager first
 NetworkManager *nm = new NetworkManager();
-std::vector<int> all_pairs;
+
+
 
 
 
@@ -50,8 +51,9 @@ stack<string> find_euler_circuit(NetworkManager* graph){
 
 
 
+vector<int> all_pairs;
 
-void Perm(int start, int end, int a[]) {
+void Perm(int start, int end, int a[], vector<int> all_pairs) {
     
     if(start == end){
 		for (int i = 0; i < end; i++){
@@ -63,18 +65,20 @@ void Perm(int start, int end, int a[]) {
     }
     for (int i = start; i < end; i++) {
         swap(a[start], a[i]);      
-        Perm(start + 1, end, a);   
+        Perm(start + 1, end, a, all_pairs);   
         swap(a[i], a[start]);      
     }
 }
 
 vector<int> find_optimal_pairs(vector<vector<int >> cost_matrix, int size){
+	
 	vector<int> optimal_pairs;
 	int list[size];
 	for(int i=0; i<size; i++){
 		list[i]=i;	
 	}
-	Perm(0, size, list);
+	
+	Perm(0, size, list, all_pairs);
 	
 	cout<<"all_pairs = ";
 	for(int i; i<all_pairs.size(); i++){
@@ -112,7 +116,7 @@ int main(int argc, char** argv){
 	}
 	*/
 	
-	nm->interpret("3graph");
+	nm->interpret("graph");
 	//set switch_num
 	for(int i=0; nm->vlist[i]!=NULL; i++){
 		nm->switch_num++;
@@ -139,6 +143,13 @@ int main(int argc, char** argv){
 		}
 		
 	}
+	
+	//generate original graph
+	Gplot *gp = new Gplot();
+	gp->gp_add(nm->elist);
+	gp->gp_dump(true);
+	gp->gp_export("origin");
+	gp->~Gplot();
 
 	//print odd nodes
 	int odd_nodes_number = odd_nodes.size();
@@ -247,10 +258,14 @@ int main(int argc, char** argv){
 		finalPath.push(finalPath2.top());
 		finalPath2.pop();
 	}
-	Gplot *gp = new Gplot();
-	gp->gp_add(nm->elist);
-	gp->gp_dump(true);
-	gp->gp_export("plot");
+	
+	
+	Gplot *gp2 = new Gplot();
+	gp2->gp_add(nm->elist);
+	gp2->gp_dump(true);
+	gp2->gp_export("result");
+	gp2->~Gplot();
+	
 	
 	
 	//output final result
