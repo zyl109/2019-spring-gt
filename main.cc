@@ -83,7 +83,7 @@ vector<int> find_optimal_pairs(vector<vector<int >> cost_matrix, int size){
 
 	Perm(0, size, list);
 	
-	//firs time initialization
+	//first time initialization
 	cost=0;
 	for(int i=0; i<size; i+=2){
 		row=all_pairs.at(0);
