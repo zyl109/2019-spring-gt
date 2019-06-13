@@ -2,8 +2,8 @@ EXEC:=main.out
 OBJS:=fakemn
 LIBS:=fake-mininet/lib
 CXXFLAGS:= -std=c++11
-ORIGIN:=origin_graph
-RESULT:=result_path
+ORIGIN:=graph
+RESULT:=result
 
 all: $(EXEC)
 

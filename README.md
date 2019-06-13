@@ -15,7 +15,7 @@ $ make
 # run 
 $ ./main.out "FileName"
 # generate png file
-$ dot plot.dot -T png -o plot.png
+$ make png
 ```
 
 ### Windows
@@ -86,12 +86,15 @@ Or you can just [DOWNLOAD a pre-built VM images](http://gofile.me/39GpL/XU5tznyO
 ### Abstrct
 Chinese postman problem is a problem about how to travel all edges and back to one start node in a graph.  
 What I've done in this project is a bi-directional and no-weighted version.  
+**Note: The input file must be a simple graph.**  
 
 ### Files
 1. `main.cc` The main program  
 2. `graph` The demo graph in project slide  
-3. `plot.dot` The dot file of final result  
-4. `plot.png` The png file of final result  
+3. `origin_graph.dot` The dot file of original graph 
+4. `origin_graph.png` The png file of original graph 
+5. `result_path.dot` The dot file of final result  
+6. `result_path.png` The png file of final result  
 
 ### Algorithms
-1.
+1. Find out all nodes with odd degree in this graph.
