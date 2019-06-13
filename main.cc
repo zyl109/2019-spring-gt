@@ -1,5 +1,6 @@
 #include <iostream>
 #include <unistd.h>
+#include <fstream>
 #include <stack>
 #include "network_manager.h"
 #include "gplot.h"
@@ -9,7 +10,7 @@ using namespace std;
 
 // create NetworkManager first
 NetworkManager *nm = new NetworkManager();
-
+vector<int> all_pairs;
 
 
 
@@ -50,7 +51,7 @@ stack<string> find_euler_circuit(NetworkManager* graph){
 }
 
 
-vector<int> all_pairs;
+
 
 //find all permutation of odd nodes
 void Perm(int start, int end, int a[]) {
@@ -168,7 +169,7 @@ int main(int argc, char** argv){
 	Gplot *gp = new Gplot();
 	gp->gp_add(nm->elist);
 	gp->gp_dump(true);
-	gp->gp_export("origin_graph");
+	gp->gp_export("graph");
 	gp->~Gplot();
 
 
@@ -183,6 +184,7 @@ int main(int argc, char** argv){
 			}
 		}	
 	}
+	
 	
 	
 	//construct a table of shortest paths length between odd nodes
@@ -259,19 +261,24 @@ int main(int argc, char** argv){
 	Gplot *gp2 = new Gplot();
 	gp2->gp_add(nm->elist);
 	gp2->gp_dump(true);
-	gp2->gp_export("result_path");
+	gp2->gp_export("result");
 	gp2->~Gplot();
 	
 	
 	
 	//output final result
+	fstream oFile;
+	oFile.open("result.txt", ios::out|ios::trunc);
 	cout << "======================================================" << endl;
-	cout<<"final path is: ";
+	cout<<"final path is: "<<endl;
+	oFile<<"final path is: "<<endl;
 	while(!finalPath.empty()){
 		cout<<finalPath.top()<<" ";
+		oFile<<finalPath.top()<<" ";
 		finalPath.pop();
 		if(!finalPath.empty()){
 			cout<<"-> ";
+			oFile<<"-> ";
 		}
 	}
 	cout<<endl;
