@@ -88,13 +88,19 @@ Chinese postman problem is a problem about how to travel all edges and back to o
 What I've done in this project is a bi-directional and no-weighted version.  
 **Note: The input file must be a simple graph.**  
 
-### Files
+### Results & Files
 1. `main.cc` The main program  
 2. `graph` The demo graph in project slide  
-3. `origin_graph.dot` The dot file of original graph 
-4. `origin_graph.png` The png file of original graph 
-5. `result_path.dot` The dot file of final result  
-6. `result_path.png` The png file of final result  
+3. `graph.dot` The dot file of original graph 
+4. `graph.png` The png file of original graph 
+5. `result.txt` The txt file of final result  
+6. `result.dot` The dot file of final result  
+7. `result.png` The png file of final result  
 
-### Algorithms
-1. Find out all nodes with odd degree in this graph.
+### Algorithms & Solutions
+1. Find out all nodes with odd degree in this graph. And put them into a vector called `odd_nodes`.
+2. Find the shortest paths between every two odd nodes. In this step, I use a double vector being a matrix to store the shortest path length, called `shortest_path_length`. For example, shortest_path_length[i][j] = the shortest length from *ith* odd node to *jth* odd node.
+3. Find a minimum-length pairwise matching of all odd nodes. In this step, I write a recursive function `Perm` to prodece the all possible permutation of odd nodes. According to this, we can easily find the optimal pairwise matching in function `find_optimal_pairs`.
+4. For each matching in 3, add the shortest paths to the original graph.
+5. Find Euler circuit in the modified graph. In this step, I write `find_euler_circuit` by Hierholzer’s algorithm. It's an algorithm can find the Euler circuit if all nodes in the graph had even degree. First, put an arbitrary node to a stack `tempPath`. Second, if there were any unmarked incident edge next to `tempPath`'s top node, mark the incident edge and push its neighbor to `tempPath`. Third, if there were NO unmarked incident edge with `tempPath`'s top node, push it to a stack `finalPath` and pop `tempPath`. Finally, we can get an Euler circuit in `finalPath` if the `tempPath` is empty.
+6. The final answer is just the Euler circuit we find.
